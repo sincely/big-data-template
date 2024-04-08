@@ -1,10 +1,3 @@
-<!--
- * @Author: daidai
- * @Date: 2022-03-01 11:17:39
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-09-29 15:50:18
- * @FilePath: \web-pc\src\pages\big-screen\view\indexs\center-map.vue
--->
 <template>
   <div class="centermap">
     <div class="maptitle">
@@ -14,9 +7,7 @@
     </div>
     <div class="mapwrap">
       <dv-border-box-13>
-        <div class="quanguo" @click="getData('china')" v-if="code !== 'china'">
-          中国
-        </div>
+        <div class="quanguo" @click="getData('china')" v-if="code !== 'china'">中国</div>
 
         <Echart id="CenterMap" :options="options" ref="CenterMap" />
       </dv-border-box-13>
@@ -25,37 +16,37 @@
 </template>
 
 <script>
-import xzqCode from "../../utils/map/xzqCode";
-import { currentGET } from "api/modules";
-import * as echarts from "echarts";
-import { GETNOBASE } from "api";
+import xzqCode from '../../utils/map/xzqCode'
+import { currentGET } from 'api/modules'
+import * as echarts from 'echarts'
+import { GETNOBASE } from 'api'
 export default {
   data() {
     return {
-      maptitle: "设备分布图",
+      maptitle: '设备分布图',
       options: {},
-      code: "china", //china 代表中国 其他地市是行政编码
+      code: 'china', //china 代表中国 其他地市是行政编码
       echartBindClick: false,
-      isSouthChinaSea: false, //是否要展示南海群岛  修改此值请刷新页面
-    };
+      isSouthChinaSea: false //是否要展示南海群岛  修改此值请刷新页面
+    }
   },
   created() {},
 
   mounted() {
     // console.log(xzqCode);
-    this.getData("china");
+    this.getData('china')
   },
   methods: {
     getData(code) {
-      currentGET("big8", { regionCode: code }).then((res) => {
-        console.log("设备分布", res);
+      currentGET('big8', { regionCode: code }).then((res) => {
+        console.log('设备分布', res)
         if (res.success) {
-          this.getGeojson(res.data.regionCode, res.data.dataList);
-          this.mapclick();
+          this.getGeojson(res.data.regionCode, res.data.dataList)
+          this.mapclick()
         } else {
-          this.$Message.warning(res.msg);
+          this.$Message.warning(res.msg)
         }
-      });
+      })
     },
     /**
      * @description: 获取geojson
@@ -64,77 +55,69 @@ export default {
      * @return {*}
      */
     async getGeojson(name, mydata) {
-      this.code = name;
+      this.code = name
       //如果要展示南海群岛并且展示的是中国的话
-      let geoname=name
-      if (this.isSouthChinaSea && name == "china") {
-        geoname = "chinaNanhai";
+      let geoname = name
+      if (this.isSouthChinaSea && name == 'china') {
+        geoname = 'chinaNanhai'
       }
       //如果有注册地图的话就不用再注册 了
-      let mapjson = echarts.getMap(name);
+      let mapjson = echarts.getMap(name)
       if (mapjson) {
-        mapjson = mapjson.geoJSON;
+        mapjson = mapjson.geoJSON
       } else {
         mapjson = await GETNOBASE(`./map-geojson/${geoname}.json`).then((res) => {
-          return res;
-        });
-        echarts.registerMap(name, mapjson);
+          return res
+        })
+        echarts.registerMap(name, mapjson)
       }
-      let cityCenter = {};
-      let arr = mapjson.features;
+      let cityCenter = {}
+      let arr = mapjson.features
       //根据geojson获取省份中心点
       arr.map((item) => {
-        cityCenter[item.properties.name] =
-          item.properties.centroid || item.properties.center;
-      });
-      let newData = [];
+        cityCenter[item.properties.name] = item.properties.centroid || item.properties.center
+      })
+      let newData = []
       mydata.map((item) => {
         if (cityCenter[item.name]) {
           newData.push({
             name: item.name,
-            value: cityCenter[item.name].concat(item.value),
-          });
+            value: cityCenter[item.name].concat(item.value)
+          })
         }
-      });
-      this.init(name, mydata, newData);
+      })
+      this.init(name, mydata, newData)
     },
     init(name, data, data2) {
       // console.log(data2);
-      let top = 45;
-      let zoom = 1.05;
+      let top = 45
+      let zoom = 1.05
       let option = {
-        backgroundColor: "rgba(0,0,0,0)",
+        backgroundColor: 'rgba(0,0,0,0)',
         tooltip: {
-          show: false,
+          show: false
         },
         legend: {
-          show: false,
+          show: false
         },
         visualMap: {
           left: 20,
           bottom: 20,
           pieces: [
-            { gte: 1000, label: "1000个以上" }, // 不指定 max，表示 max 为无限大（Infinity）。
-            { gte: 600, lte: 999, label: "600-999个" },
-            { gte: 200, lte: 599, label: "200-599个" },
-            { gte: 50, lte: 199, label: "49-199个" },
-            { gte: 10, lte: 49, label: "10-49个" },
-            { lte: 9, label: "1-9个" }, // 不指定 min，表示 min 为无限大（-Infinity）。
+            { gte: 1000, label: '1000个以上' }, // 不指定 max，表示 max 为无限大（Infinity）。
+            { gte: 600, lte: 999, label: '600-999个' },
+            { gte: 200, lte: 599, label: '200-599个' },
+            { gte: 50, lte: 199, label: '49-199个' },
+            { gte: 10, lte: 49, label: '10-49个' },
+            { lte: 9, label: '1-9个' } // 不指定 min，表示 min 为无限大（-Infinity）。
           ],
           inRange: {
             // 渐变颜色，从小到大
-            color: [
-              "#c3d7df",
-              "#5cb3cc",
-              "#8abcd1",
-              "#66a9c9",
-              "#2f90b9",
-              "#1781b5",
-            ],
+            color: ['#c3d7df', '#5cb3cc', '#8abcd1', '#66a9c9', '#2f90b9', '#1781b5']
           },
           textStyle: {
-            color: "#fff",
-          },
+            color: '#fff'
+          }
         },
         geo: {
           map: name,
@@ -143,12 +126,12 @@ export default {
           zoom: zoom,
           top: top,
           // aspectScale: 0.78,
-          show: false,
+          show: false
         },
         series: [
           {
-            name: "MAP",
-            type: "map",
+            name: 'MAP',
+            type: 'map',
             map: name,
             // aspectScale: 0.78,
             data: data,
@@ -161,151 +144,151 @@ export default {
               show: true,
               formatter: function (params) {
                 if (params.data) {
-                  return params.name + "：" + params.data["value"];
+                  return params.name + '：' + params.data['value']
                 } else {
-                  return params.name;
+                  return params.name
                 }
               },
-              backgroundColor: "rgba(0,0,0,.6)",
-              borderColor: "rgba(147, 235, 248, .8)",
+              backgroundColor: 'rgba(0,0,0,.6)',
+              borderColor: 'rgba(147, 235, 248, .8)',
               textStyle: {
-                color: "#FFF",
-              },
+                color: '#FFF'
+              }
             },
             label: {
               show: false,
-              color: "#000",
+              color: '#000',
               // position: [-10, 0],
               formatter: function (val) {
                 // console.log(val)
                 if (val.data !== undefined) {
-                  return val.name.slice(0, 2);
+                  return val.name.slice(0, 2)
                 } else {
-                  return "";
+                  return ''
                 }
               },
-              rich: {},
+              rich: {}
             },
             emphasis: {
               label: {
-                show: false,
+                show: false
               },
               itemStyle: {
-                areaColor: "#389BB7",
-                borderWidth: 1,
-              },
+                areaColor: '#389BB7',
+                borderWidth: 1
+              }
             },
             itemStyle: {
-              borderColor: "rgba(147, 235, 248, .8)",
+              borderColor: 'rgba(147, 235, 248, .8)',
               borderWidth: 1,
               areaColor: {
-                type: "radial",
+                type: 'radial',
                 x: 0.5,
                 y: 0.5,
                 r: 0.8,
                 colorStops: [
                   {
                     offset: 0,
-                    color: "rgba(147, 235, 248, 0)", // 0% 处的颜色
+                    color: 'rgba(147, 235, 248, 0)' // 0% 处的颜色
                   },
                   {
                     offset: 1,
-                    color: "rgba(147, 235, 248, .2)", // 100% 处的颜色
-                  },
+                    color: 'rgba(147, 235, 248, .2)' // 100% 处的颜色
+                  }
                 ],
-                globalCoord: false, // 缺为 false
+                globalCoord: false // 缺为 false
               },
-              shadowColor: "rgba(128, 217, 248, .3)",
+              shadowColor: 'rgba(128, 217, 248, .3)',
               shadowOffsetX: -2,
               shadowOffsetY: 2,
-              shadowBlur: 10,
-            },
+              shadowBlur: 10
+            }
           },
           {
             data: data2,
-            type: "effectScatter",
-            coordinateSystem: "geo",
+            type: 'effectScatter',
+            coordinateSystem: 'geo',
             symbolSize: function (val) {
-              return 4;
+              return 4
               // return val[2] / 50;
             },
             legendHoverLink: true,
-            showEffectOn: "render",
+            showEffectOn: 'render',
             rippleEffect: {
               // period: 4,
               scale: 6,
-              color: "rgba(255,255,255, 1)",
-              brushType: "fill",
+              color: 'rgba(255,255,255, 1)',
+              brushType: 'fill'
             },
             tooltip: {
               show: true,
               formatter: function (params) {
                 if (params.data) {
-                  return params.name + "：" + params.data["value"][2];
+                  return params.name + '：' + params.data['value'][2]
                 } else {
-                  return params.name;
+                  return params.name
                 }
               },
-              backgroundColor: "rgba(0,0,0,.6)",
-              borderColor: "rgba(147, 235, 248, .8)",
+              backgroundColor: 'rgba(0,0,0,.6)',
+              borderColor: 'rgba(147, 235, 248, .8)',
               textStyle: {
-                color: "#FFF",
-              },
+                color: '#FFF'
+              }
             },
             label: {
               formatter: (param) => {
-                return param.name.slice(0, 2);
+                return param.name.slice(0, 2)
               },
 
               fontSize: 11,
               offset: [0, 2],
-              position: "bottom",
-              textBorderColor: "#fff",
-              textShadowColor: "#000",
+              position: 'bottom',
+              textBorderColor: '#fff',
+              textShadowColor: '#000',
               textShadowBlur: 10,
               textBorderWidth: 0,
-              color: "#FFF",
-              show: true,
+              color: '#FFF',
+              show: true
             },
             // colorBy: "data",
             itemStyle: {
-              color: "rgba(255,255,255,1)",
-              borderColor: "rgba(2255,255,255,2)",
+              color: 'rgba(255,255,255,1)',
+              borderColor: 'rgba(2255,255,255,2)',
               borderWidth: 4,
-              shadowColor: "#000",
-              shadowBlur: 10,
-            },
-          },
-        ],
-         //动画效果
-            // animationDuration: 1000,
-            // animationEasing: 'linear',
-            // animationDurationUpdate: 1000
-      };
-      this.options = option;
+              shadowColor: '#000',
+              shadowBlur: 10
+            }
+          }
+        ]
+        //动画效果
+        // animationDuration: 1000,
+        // animationEasing: 'linear',
+        // animationDurationUpdate: 1000
+      }
+      this.options = option
     },
     message(text) {
       this.$Message({
         text: text,
-        type: "warning",
-      });
+        type: 'warning'
+      })
     },
     mapclick() {
-      if (this.echartBindClick) return;
+      if (this.echartBindClick) return
       //单击切换到级地图，当mapCode有值,说明可以切换到下级地图
-      this.$refs.CenterMap.chart.on("click", (params) => {
+      this.$refs.CenterMap.chart.on('click', (params) => {
         // console.log(params);
-        let xzqData = xzqCode[params.name];
+        let xzqData = xzqCode[params.name]
         if (xzqData) {
-          this.getData(xzqData.adcode);
+          this.getData(xzqData.adcode)
         } else {
-          this.message("暂无下级地市!");
+          this.message('暂无下级地市!')
         }
-      });
-      this.echartBindClick = true;
-    },
-  },
-};
+      })
+      this.echartBindClick = true
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .centermap {
@@ -322,12 +305,7 @@ export default {
       font-size: 28px;
       font-weight: 900;
       letter-spacing: 6px;
-      background: linear-gradient(
-        92deg,
-        #0072ff 0%,
-        #00eaff 48.8525390625%,
-        #01aaff 100%
-      );
+      background: linear-gradient(92deg, #0072ff 0%, #00eaff 48.8525390625%, #01aaff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin: 0 10px;
@@ -342,11 +320,11 @@ export default {
     }
 
     .zuo {
-      background: url("../../assets/img/xiezuo.png") no-repeat;
+      background: url('../../assets/img/xiezuo.png') no-repeat;
     }
 
     .you {
-      background: url("../../assets/img/xieyou.png") no-repeat;
+      background: url('../../assets/img/xieyou.png') no-repeat;
     }
   }
 
@@ -370,8 +348,7 @@ export default {
       line-height: 26px;
       letter-spacing: 6px;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0, 237, 237, 0.5),
-        0 0 6px rgba(0, 237, 237, 0.4);
+      box-shadow: 0 2px 4px rgba(0, 237, 237, 0.5), 0 0 6px rgba(0, 237, 237, 0.4);
     }
   }
 }

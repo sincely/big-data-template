@@ -1,16 +1,8 @@
-/*
- * @Author: daidai
- * @Date: 2022-02-28 10:48:02
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-04-26 14:55:41
- * @FilePath: \web-pc\src\pages\big-screen\utils\drawMixin.js
- */
 // 屏幕适配 mixin 函数
-
 // * 默认缩放值
 const scale = {
   width: '1',
-  height: '1',
+  height: '1'
 }
 
 // * 设计稿尺寸（px）
@@ -24,28 +16,28 @@ export default {
   data() {
     return {
       // * 定时函数
-      drawTiming: null,
+      drawTiming: null
     }
   },
   computed: {
-    isScale(){
+    isScale() {
       return this.$store.state.setting.isScale
     }
   },
-  mounted () {
-    if(!this.isScale){
+  mounted() {
+    if (!this.isScale) {
       return
     }
     this.calcRate()
     window.addEventListener('resize', this.resize)
   },
-  beforeDestroy () {
-       window.removeEventListener('resize', this.resize)
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resize)
   },
   methods: {
-    calcRate () {
-      const appRef = this.$refs["appRef"]
-      if (!appRef) return 
+    calcRate() {
+      const appRef = this.$refs['appRef']
+      if (!appRef) return
       // 当前宽高比
       const currentRate = parseFloat((window.innerWidth / window.innerHeight).toFixed(5))
       if (appRef) {
@@ -56,14 +48,14 @@ export default {
           appRef.style.transform = `scale(${scale.width}, ${scale.height}) translate(-50%, -50%)`
         } else {
           // 表示更高
-          scale.height = ((window.innerWidth / baseProportion) / baseHeight).toFixed(5)
+          scale.height = (window.innerWidth / baseProportion / baseHeight).toFixed(5)
           scale.width = (window.innerWidth / baseWidth).toFixed(5)
           appRef.style.transform = `scale(${scale.width}, ${scale.height}) translate(-50%, -50%)`
         }
       }
     },
-    resize () {
-      if(!this.isScale){
+    resize() {
+      if (!this.isScale) {
         return
       }
       clearTimeout(this.drawTiming)
@@ -71,5 +63,5 @@ export default {
         this.calcRate()
       }, 200)
     }
-  },
+  }
 }

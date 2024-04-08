@@ -1,18 +1,6 @@
-<!--
- * @Author: daidai
- * @Date: 2022-01-12 14:23:32
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-09-09 14:47:24
- * @FilePath: \web-pc\src\pages\big-screen\view\home.vue
--->
 <template>
   <!-- <div id="index" ref="appRef" class="index_home" :class="{ pageisScale: isScale }"> -->
-  <ScaleScreen
-    :width="1920"
-    :height="1080"
-    class="scale-wrap"
-    :selfAdaption="$store.state.setting.isScale"
-  >
+  <ScaleScreen :width="1920" :height="1080" class="scale-wrap" :selfAdaption="$store.state.setting.isScale">
     <div class="bg">
       <dv-loading v-if="loading">Loading...</dv-loading>
       <div v-else class="host-body">
@@ -28,11 +16,7 @@
           </div>
           <div class="timers">
             {{ dateYear }} {{ dateWeek }} {{ dateDay }}
-            <i
-              class="blq-icon-shezhi02"
-              style="margin-left: 10px"
-              @click="showSetting"
-            ></i>
+            <i class="blq-icon-shezhi02" style="margin-left: 10px" @click="showSetting"></i>
           </div>
         </div>
         <!-- 头部 e-->
@@ -47,9 +31,9 @@
 </template>
 
 <script>
-import { formatTime } from "../utils/index.js";
-import Setting from "./setting.vue";
-import ScaleScreen from "@/components/scale-screen/scale-screen.vue";
+import { formatTime } from '../utils/index.js'
+import Setting from './setting.vue'
+import ScaleScreen from '@/components/scale-screen/scale-screen.vue'
 export default {
   components: { Setting, ScaleScreen },
   data() {
@@ -59,44 +43,44 @@ export default {
       dateDay: null,
       dateYear: null,
       dateWeek: null,
-      weekday: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-    };
+      weekday: ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    }
   },
   filters: {
     numsFilter(msg) {
-      return msg || 0;
-    },
+      return msg || 0
+    }
   },
   computed: {},
   created() {},
   mounted() {
-    this.timeFn();
-    this.cancelLoading();
+    this.timeFn()
+    this.cancelLoading()
   },
   beforeDestroy() {
-    clearInterval(this.timing);
+    clearInterval(this.timing)
   },
   methods: {
     showSetting() {
-      this.$refs.setting.init();
+      this.$refs.setting.init()
     },
     timeFn() {
       this.timing = setInterval(() => {
-        this.dateDay = formatTime(new Date(), "HH: mm: ss");
-        this.dateYear = formatTime(new Date(), "yyyy-MM-dd");
-        this.dateWeek = this.weekday[new Date().getDay()];
-      }, 1000);
+        this.dateDay = formatTime(new Date(), 'HH: mm: ss')
+        this.dateYear = formatTime(new Date(), 'yyyy-MM-dd')
+        this.dateWeek = this.weekday[new Date().getDay()]
+      }, 1000)
     },
     cancelLoading() {
       let timer = setTimeout(() => {
-        this.loading = false;
-        clearTimeout(timer);
-      }, 500);
-    },
-  },
-};
+        this.loading = false
+        clearTimeout(timer)
+      }, 500)
+    }
+  }
+}
 </script>
 
 <style lang="scss">
-@import "./home.scss";
+@import './home.scss';
 </style>

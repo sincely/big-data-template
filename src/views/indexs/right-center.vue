@@ -1,13 +1,6 @@
-<!--
- * @Author: daidai
- * @Date: 2022-03-01 15:51:43
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-09-29 15:12:46
- * @FilePath: \web-pc\src\pages\big-screen\view\indexs\right-bottom.vue
--->
 <template>
   <div class="right_bottom">
-    <dv-capsule-chart :config="config" style="width:100%;height:260px" />
+    <dv-capsule-chart :config="config" style="width: 100%; height: 260px" />
   </div>
 </template>
 
@@ -19,19 +12,16 @@ export default {
       gatewayno: '',
       config: {
         showValue: true,
-        unit: "次",
+        unit: '次',
         data: []
-      },
-
-    };
+      }
+    }
   },
   created() {
     this.getData()
-
   },
-  computed: {
-  },
-  mounted() { },
+  computed: {},
+  mounted() {},
   beforeDestroy() {
     this.clearData()
   },
@@ -49,16 +39,15 @@ export default {
       }
       let looper = (a) => {
         this.getData()
-      };
-      this.timer = setInterval(looper, this.$store.state.setting.echartsAutoTime);
+      }
+      this.timer = setInterval(looper, this.$store.state.setting.echartsAutoTime)
     },
     getData() {
       this.pageflag = true
       // this.pageflag =false
-      currentGET('big7', { gatewayno: this.gatewayno }).then(res => {
-
+      currentGET('big7', { gatewayno: this.gatewayno }).then((res) => {
         if (!this.timer) {
-          console.log('报警排名', res);
+          console.log('报警排名', res)
         }
         if (res.success) {
           this.config = {
@@ -75,15 +64,15 @@ export default {
           })
         }
       })
-    },
-  },
-};
+    }
+  }
+}
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .list_Wrap {
   height: 100%;
   overflow: hidden;
-  :deep(.kong)   {
+  :deep(.kong) {
     width: auto;
   }
 }
@@ -92,7 +81,6 @@ export default {
   .img_wrap {
     overflow-x: auto;
   }
-
 }
 
 .right_bottom {
@@ -119,7 +107,8 @@ export default {
         margin-left: 30px;
       }
 
-      input {}
+      input {
+      }
     }
   }
 
@@ -146,10 +135,6 @@ export default {
         flex-shrink: 0;
       }
     }
-
-
-
-
   }
 
   .noData {
@@ -157,7 +142,6 @@ export default {
     line-height: 100px;
     text-align: center;
     color: rgb(129, 128, 128);
-
   }
 }
 </style>

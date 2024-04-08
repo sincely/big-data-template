@@ -1,43 +1,34 @@
 <template>
-  <div class='kong'>
-      <slot></slot>
+  <div class="kong">
+    <slot></slot>
   </div>
 </template>
 
 <script>
-
 export default {
   components: {},
   data() {
-    return {
-    
-    };
+    return {}
   },
-  props:{
-    data:{
-      type:Array,
-      default:()=>[]
+  props: {
+    data: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {},
   methods: {
-    init(){
-    },
+    init() {}
   },
-  created() {
-  
-  },
-  mounted() {
-  
-  },
-  beforeDestroy() { 
-  },
+  created() {},
+  mounted() {},
+  beforeDestroy() {}
 }
 </script>
 
-<style lang='scss' scoped>
-.kong{
-    width: 100%;
-    height: 100%;
+<style lang="scss" scoped>
+.kong {
+  width: 100%;
+  height: 100%;
 }
 </style>

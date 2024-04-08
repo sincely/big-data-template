@@ -1,26 +1,19 @@
-<!--
- * @Author: daidai
- * @Date: 2022-03-01 15:27:58
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-05-07 11:24:14
- * @FilePath: \web-pc\src\pages\big-screen\view\indexs\right-center.vue
--->
 <template>
   <div v-if="pageflag" class="right_center_wrap beautify-scroll-def" :class="{ 'overflow-y-auto': !sbtxSwiperFlag }">
     <component :is="components" :data="list" :class-option="defaultOption">
-      <ul class="right_center ">
+      <ul class="right_center">
         <li class="right_center_item" v-for="(item, i) in list" :key="i">
           <span class="orderNum">{{ i + 1 }}</span>
           <div class="inner_right">
             <div class="dibu"></div>
             <div class="flex">
               <div class="info">
-                <span class="labels ">设备ID：</span>
+                <span class="labels">设备ID：</span>
                 <span class="contents zhuyao"> {{ item.gatewayno }}</span>
               </div>
               <div class="info">
                 <span class="labels">型号：</span>
-                <span class="contents "> {{ item.terminalno }}</span>
+                <span class="contents"> {{ item.terminalno }}</span>
               </div>
               <div class="info">
                 <span class="labels">告警值：</span>
@@ -28,25 +21,24 @@
               </div>
             </div>
 
-
             <div class="flex">
-
               <div class="info">
                 <span class="labels"> 地址：</span>
-                <span class="contents ciyao" style="font-size:12px"> {{ item.provinceName }}/{{ item.cityName }}/{{ item.countyName }}</span>
+                <span class="contents ciyao" style="font-size: 12px">
+                  {{ item.provinceName }}/{{ item.cityName }}/{{ item.countyName }}</span
+                >
               </div>
               <div class="info time">
                 <span class="labels">时间：</span>
-                <span class="contents" style="font-size:12px"> {{ item.createtime }}</span>
+                <span class="contents" style="font-size: 12px"> {{ item.createtime }}</span>
               </div>
-
             </div>
             <div class="flex">
-
               <div class="info">
                 <span class="labels">报警内容：</span>
-                <span class="contents ciyao" :class="{ warning: item.alertdetail }"> {{ item.alertdetail || '无'
-                }}</span>
+                <span class="contents ciyao" :class="{ warning: item.alertdetail }">
+                  {{ item.alertdetail || '无' }}</span
+                >
               </div>
             </div>
           </div>
@@ -54,13 +46,12 @@
       </ul>
     </component>
   </div>
-  <Reacquire v-else @onclick="getData" style="line-height:200px" />
-
+  <Reacquire v-else @onclick="getData" style="line-height: 200px" />
 </template>
 
 <script>
 import { currentGET } from 'api/modules'
-import vueSeamlessScroll from 'vue-seamless-scroll'  // vue2引入方式
+import vueSeamlessScroll from 'vue-seamless-scroll' // vue2引入方式
 import Kong from '../../components/kong.vue'
 export default {
   components: { vueSeamlessScroll, Kong },
@@ -71,19 +62,20 @@ export default {
       pageflag: true,
       defaultOption: {
         ...this.$store.state.setting.defaultOption,
-        limitMoveNum: 3, 
-        singleHeight: 250, 
-        step:0,
+        limitMoveNum: 3,
+        singleHeight: 250,
+        step: 0
       }
-
-    };
+    }
   },
   computed: {
     sbtxSwiperFlag() {
-      let ssyjSwiper = this.$store.state.setting.ssyjSwiper
+      let { ssyjSwiper } = this.$store.state.setting
       if (ssyjSwiper) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.components = vueSeamlessScroll
       } else {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.components = Kong
       }
       return ssyjSwiper
@@ -93,30 +85,29 @@ export default {
     this.getData()
   },
 
-  mounted() { },
+  mounted() {},
   methods: {
     getData() {
       this.pageflag = true
       // this.pageflag =false
-      currentGET('big5', { limitNum: 50 }).then(res => {
-        console.log('实时预警', res);
+      currentGET('big5', { limitNum: 50 }).then((res) => {
+        console.log('实时预警', res)
         if (res.success) {
           this.list = res.data.list
           let timer = setTimeout(() => {
-              clearTimeout(timer)
-              this.defaultOption.step=this.$store.state.setting.defaultOption.step
-          }, this.$store.state.setting.defaultOption.waitTime);
+            clearTimeout(timer)
+            this.defaultOption.step = this.$store.state.setting.defaultOption.step
+          }, this.$store.state.setting.defaultOption.waitTime)
         } else {
           this.pageflag = false
           this.$Message.warning(res.msg)
         }
       })
-    },
-
-  },
-};
+    }
+  }
+}
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .right_center {
   width: 100%;
   height: 100%;
@@ -134,7 +125,6 @@ export default {
       margin: 0 20px 0 -20px;
     }
 
-
     .inner_right {
       position: relative;
       height: 100%;
@@ -146,7 +136,7 @@ export default {
         position: absolute;
         height: 2px;
         width: 104%;
-        background-image: url("../../assets/img/zuo_xuxian.png");
+        background-image: url('../../assets/img/zuo_xuxian.png');
         bottom: -12px;
         left: -2%;
         background-size: cover;
@@ -174,11 +164,10 @@ export default {
       }
 
       .warning {
-        color: #E6A23C;
+        color: #e6a23c;
         font-size: 15px;
       }
     }
-
   }
 }
 

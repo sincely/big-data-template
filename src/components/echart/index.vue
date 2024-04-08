@@ -1,16 +1,9 @@
-<!--
- * @Author: daidai
- * @Date: 2022-02-28 16:29:08
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-09-27 15:05:45
- * @FilePath: \web-pc\src\pages\big-screen\components\echart\index.vue
--->
 <template>
   <div :id="id" :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
 export default {
   name: 'echart',
   props: {
@@ -32,32 +25,32 @@ export default {
     },
     options: {
       type: Object,
-      default: ()=>({})
+      default: () => ({})
     }
   },
-  data () {
+  data() {
     return {
       chart: null
     }
   },
   watch: {
     options: {
-      handler (options) {
+      handler(options) {
         // 设置true清空echart缓存
         this.chart.setOption(options, true)
       },
       deep: true
     }
   },
-  mounted () {
-    this.initChart();
+  mounted() {
+    this.initChart()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.chart.dispose()
     this.chart = null
   },
   methods: {
-    initChart () {
+    initChart() {
       // 初始化echart
       this.chart = echarts.init(this.$el)
       this.chart.setOption(this.options, true)
@@ -66,5 +59,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>
